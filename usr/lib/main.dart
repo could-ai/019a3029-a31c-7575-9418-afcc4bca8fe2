@@ -1,120 +1,212 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SeoCopilotApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SeoCopilotApp extends StatelessWidget {
+  const SeoCopilotApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "SEO Copilot",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primarySwatch: Colors.blueGrey,
+        brightness: Brightness.dark,
+        cardColor: Colors.grey[850],
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          titleMedium: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(fontSize: 14.0, height: 1.5),
+          bodySmall: TextStyle(fontSize: 12.0, color: Colors.grey),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const SeoCopilotDashboard(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class SeoCopilotDashboard extends StatelessWidget {
+  const SeoCopilotDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text("SEO Copilot Dashboard"),
+        centerTitle: true,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionTitle("⚙️ How SEO Copilot Works", textTheme),
+            const SizedBox(height: 8),
+            Text(
+              "SEO Copilot acts as an autonomous SEO growth engineer — it doesn’t just analyze data but also learns, predicts, and optimizes website and app rankings automatically.",
+              style: textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            _buildWorkflowSteps(),
+            const SizedBox(height: 24),
+            _buildSectionTitle("🧠 Tech Stack Overview", textTheme),
+            const SizedBox(height: 16),
+            _buildTechStackTable(),
+            const SizedBox(height: 24),
+            _buildSectionTitle("🔄 In Short", textTheme),
+            const SizedBox(height: 16),
+            _buildSummary(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildSectionTitle(String title, TextTheme textTheme) {
+    return Text(
+      title,
+      style: textTheme.titleLarge,
+    );
+  }
+
+  Widget _buildWorkflowSteps() {
+    return const Column(
+      children: [
+        WorkflowStepTile(
+          title: "1. Data Aggregation Layer",
+          icon: Icons.layers,
+          content:
+              "Collects SEO data from Google Search Console, Play Store, and website crawlers using APIs, web scrapers, and Selenium automation to create a unified dataset.",
+        ),
+        WorkflowStepTile(
+          title: "2. Knowledge Graph Construction",
+          icon: Icons.device_hub,
+          content:
+              "Structures data into a graph (Neo4j/NetworkX) where nodes are keywords, pages, etc., and edges are relationships. This helps the AI understand contextual relationships.",
+        ),
+        WorkflowStepTile(
+          title: "3. Predictive AI Engine (TGNN + LLM)",
+          icon: Icons.online_prediction,
+          content:
+              "A Temporal Graph Neural Network (TGNN) analyzes the graph over time to predict ranking drift. An LLM (like GPT) converts these predictions into human-readable insights.",
+        ),
+        WorkflowStepTile(
+          title: "4. Optimization Agent (Reinforcement Learning)",
+          icon: Icons.auto_awesome,
+          content:
+              "An RL agent (PPO/DQN) decides the best optimization actions (e.g., updating meta titles, changing links) and learns from feedback to automate improvements.",
+        ),
+        WorkflowStepTile(
+          title: "5. Dashboard Interface",
+          icon: Icons.dashboard,
+          content:
+              "A Streamlit or Next.js dashboard displays all metrics, predictions, and optimizations. It provides interactive and visual reports on performance.",
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTechStackTable() {
+    const techStack = [
+      {"tech": "Python", "purpose": "Core language for data processing, AI models, and backend logic"},
+      {"tech": "BeautifulSoup & Selenium", "purpose": "Web scraping and crawling to collect SEO data"},
+      {"tech": "PyTorch Geometric", "purpose": "Framework for building and training Temporal Graph Neural Networks (TGNNs)"},
+      {"tech": "GPT API (LLM)", "purpose": "Generates human-readable SEO insights and suggestions"},
+      {"tech": "NetworkX / Neo4j", "purpose": "Constructs and manages the Knowledge Graph"},
+      {"tech": "MongoDB", "purpose": "Stores collected SEO metrics, ranking history, and AI model outputs"},
+      {"tech": "Streamlit / Next.js", "purpose": "Frontend dashboard to visualize performance"},
+      {"tech": "Reinforcement Learning (PPO/DQN)", "purpose": "Algorithm that decides which optimization actions to take"},
+    ];
+
+    return Card(
+      elevation: 2,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columnSpacing: 20,
+          columns: const [
+            DataColumn(label: Text("Technology", style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(label: Text("Purpose / Role in Project", style: TextStyle(fontWeight: FontWeight.bold))),
+          ],
+          rows: techStack.map((item) => DataRow(
+            cells: [
+              DataCell(Text(item["tech"]!)),
+              DataCell(SizedBox(width: 300, child: Text(item["purpose"]!, softWrap: true))),
+            ],
+          )).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummary() {
+    const summaryPoints = [
+      "Collects SEO data",
+      "Builds a Knowledge Graph",
+      "Predicts ranking changes using TGNN",
+      "Decides optimization steps using RL",
+      "Explains & Displays results on an interactive dashboard",
+    ];
+
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: summaryPoints.asMap().entries.map((entry) {
+            int idx = entry.key;
+            String val = entry.value;
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("${idx + 1}. ", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Expanded(child: Text(val)),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class WorkflowStepTile extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final String content;
+
+  const WorkflowStepTile({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      elevation: 2,
+      child: ExpansionTile(
+        leading: Icon(icon, color: Colors.cyanAccent),
+        title: Text(title, style: textTheme.titleMedium),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(content, style: textTheme.bodyMedium),
+          ),
+        ],
+      ),
     );
   }
 }
